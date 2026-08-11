@@ -1,10 +1,12 @@
 import type { SkillGroup } from "./types";
 
-/** Skill inventory transcribed from the source CV, grouped by discipline. */
+/**
+ * Skill inventory transcribed from the source CV, grouped by discipline.
+ * Group labels are translated in Dictionary.skillGroupLabels, keyed by `id`.
+ */
 export const skillGroups: SkillGroup[] = [
   {
     id: "game",
-    label: "Game Development",
     tier: "core",
     skills: [
       "Unity (C#)",
@@ -19,7 +21,6 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "mobile",
-    label: "Mobile",
     tier: "core",
     skills: [
       "Flutter",
@@ -38,7 +39,6 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "backend",
-    label: "Backend",
     tier: "core",
     skills: [
       "Laravel",
@@ -55,7 +55,6 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "architecture",
-    label: "Architecture & Patterns",
     tier: "core",
     skills: [
       "Clean Architecture",
@@ -71,13 +70,11 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "frontend",
-    label: "Frontend",
     tier: "working",
     skills: ["HTML", "CSS", "JavaScript", "jQuery", "WebView"],
   },
   {
     id: "data",
-    label: "Databases",
     tier: "working",
     skills: [
       "MySQL",
@@ -91,7 +88,6 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "cloud",
-    label: "Cloud & DevOps",
     tier: "working",
     skills: [
       "AWS (S3, CloudFront, EC2)",
@@ -105,7 +101,6 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "quality",
-    label: "Testing & Release",
     tier: "working",
     skills: [
       "Unit testing",
@@ -122,7 +117,6 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "integrations",
-    label: "Integrations",
     tier: "working",
     skills: [
       "Zoom SDK",
@@ -142,7 +136,6 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "ai",
-    label: "AI-Assisted Development",
     tier: "working",
     skills: ["GitHub Copilot", "ChatGPT", "Gemini"],
   },

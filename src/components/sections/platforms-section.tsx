@@ -1,17 +1,20 @@
 import { platforms } from "@/content/platforms";
+import type { Dictionary } from "@/i18n/types";
 import { Icon } from "@/components/ui/icon";
 import { Reveal } from "@/components/ui/reveal";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 
-export function PlatformsSection() {
+export function PlatformsSection({ dictionary }: { dictionary: Dictionary }) {
+  const { sections, platformNotes } = dictionary;
+
   return (
     <Section id="platforms" bordered>
       <Reveal>
         <SectionHeading
           index="04"
-          title="Platforms shipped"
-          description="Production work delivered across six platforms, including apps I registered, submitted and published to the App Store and Google Play myself."
+          title={sections.platforms.title}
+          description={sections.platforms.description}
         />
       </Reveal>
 
@@ -22,7 +25,9 @@ export function PlatformsSection() {
               <Icon name="layers" className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
               <div>
                 <h3 className="text-sm font-semibold tracking-tight text-fg">{platform.name}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-fg-muted">{platform.note}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-fg-muted">
+                  {platformNotes[platform.name]}
+                </p>
               </div>
             </div>
           </Reveal>

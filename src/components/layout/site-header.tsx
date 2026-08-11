@@ -2,15 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { navItems } from "@/content/navigation";
-import { profile } from "@/content/profile";
 import { Icon } from "@/components/ui/icon";
+
+interface SiteHeaderProps {
+  name: string;
+  /** Pre-translated nav labels keyed by section id. */
+  navLabels: Record<string, string>;
+  sectionsNavLabel: string;
+  getInTouchLabel: string;
+  /** Rendered as-is; built by a Server Component so it ships no extra client JS. */
+  languageSwitcher: React.ReactNode;
+}
 
 /**
  * Sticky header with scroll-spy nav.
  * Tracks which section owns the viewport so the active link stays accurate
  * during both user scrolling and anchor jumps.
  */
-export function SiteHeader() {
+export function SiteHeader({
+  name,
+  navLabels,
+  sectionsNavLabel,
+  getInTouchLabel,
+  languageSwitcher,
+}: SiteHeaderProps) {
   // Empty until a section actually intersects: the visitor starts on the hero
   // (id="top", not a nav item), so defaulting to navItems[0] would mark "About"
   // as current before it has been reached.
@@ -52,16 +67,13 @@ export function SiteHeader() {
         isScrolled ? "border-b border-edge/80 bg-canvas/85 backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-6">
-        <a
-          href="#top"
-          className="group flex items-center gap-2.5 text-sm font-semibold tracking-tight text-fg"
-        >
+      <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-4 px-6">
+        <a href="#top" className="flex items-center gap-2.5 text-sm font-semibold tracking-tight text-fg">
           <Icon name="terminal" className="h-4 w-4 text-accent" />
-          <span>{profile.name}</span>
+          <span className="whitespace-nowrap">{name}</span>
         </a>
 
-        <nav aria-label="Sections" className="hidden md:block">
+        <nav aria-label={sectionsNavLabel} className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {navItems.map((item) => {
               const isActive = activeId === item.id;
@@ -71,12 +83,10 @@ export function SiteHeader() {
                     href={`#${item.id}`}
                     aria-current={isActive ? "true" : undefined}
                     className={`rounded-md px-3 py-2 text-sm transition-colors duration-200 ${
-                      isActive
-                        ? "text-accent"
-                        : "text-fg-muted hover:text-fg"
+                      isActive ? "text-accent" : "text-fg-muted hover:text-fg"
                     }`}
                   >
-                    {item.label}
+                    {navLabels[item.id]}
                   </a>
                 </li>
               );
@@ -84,12 +94,15 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <a
-          href="#contact"
-          className="rounded-md border border-edge-hi bg-panel-hi px-3.5 py-2 text-sm font-medium text-fg transition-colors duration-200 hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
-        >
-          Get in touch
-        </a>
+        <div className="flex items-center gap-2">
+          {languageSwitcher}
+          <a
+            href="#contact"
+            className="hidden rounded-md border border-edge-hi bg-panel-hi px-3.5 py-2 text-sm font-medium text-fg transition-colors duration-200 hover:border-accent/50 hover:bg-accent/10 hover:text-accent sm:block"
+          >
+            {getInTouchLabel}
+          </a>
+        </div>
       </div>
     </header>
   );

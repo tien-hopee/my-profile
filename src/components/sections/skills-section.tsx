@@ -1,17 +1,20 @@
 import { skillGroups } from "@/content/skills";
+import type { Dictionary } from "@/i18n/types";
 import { Reveal } from "@/components/ui/reveal";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { TechTag } from "@/components/ui/tech-tag";
 
-export function SkillsSection() {
+export function SkillsSection({ dictionary }: { dictionary: Dictionary }) {
+  const { sections, labels, skillGroupLabels } = dictionary;
+
   return (
     <Section id="skills" bordered>
       <Reveal>
         <SectionHeading
           index="02"
-          title="Technical skills"
-          description="Grouped by discipline. Highlighted groups are where I work day to day; the rest are tools I use as projects require."
+          title={sections.skills.title}
+          description={sections.skills.description}
         />
       </Reveal>
 
@@ -26,10 +29,12 @@ export function SkillsSection() {
               }`}
             >
               <div className="mb-4 flex items-center justify-between gap-3">
-                <h3 className="text-sm font-semibold tracking-tight text-fg">{group.label}</h3>
+                <h3 className="text-sm font-semibold tracking-tight text-fg">
+                  {skillGroupLabels[group.id]}
+                </h3>
                 {group.tier === "core" ? (
                   <span className="font-mono text-[10px] uppercase tracking-widest text-accent">
-                    Core
+                    {labels.core}
                   </span>
                 ) : null}
               </div>

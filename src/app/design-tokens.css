@@ -22,8 +22,10 @@
   --color-accent: #5b9cff;
   --color-live: #34d399;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono-code), ui-monospace, "SF Mono", monospace;
+  /* Noto Sans JP follows Inter so Japanese glyphs resolve consistently on every
+     platform; Latin text still renders in Inter because it is matched first. */
+  --font-sans: var(--font-inter), var(--font-jp), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-code), var(--font-jp), ui-monospace, "SF Mono", monospace;
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }

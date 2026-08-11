@@ -2,34 +2,36 @@
 
 import { useId, useState } from "react";
 import type { Project } from "@/content/types";
-import { categoryLabels } from "@/content/projects";
 import { Icon } from "@/components/ui/icon";
 
 interface ExperienceTimelineItemProps {
   project: Project;
   /** The most recent entry starts expanded so the page is never fully collapsed. */
   defaultExpanded?: boolean;
-  /**
-   * Panel body, rendered by the parent Server Component. Passing it as children
-   * keeps the detail markup out of the client bundle — only the toggle needs
-   * client behaviour.
-   */
+  /** Pre-translated header copy — this is a client component, so no dictionary here. */
+  header: {
+    name: string;
+    role: string;
+    /** Already-formatted facts, e.g. ["Mobile", "Team of 3", "6 months"]. */
+    metaFacts: string[];
+    expandLabel: string;
+    collapseLabel: string;
+  };
+  /** Thumbnail element, rendered by the parent Server Component. */
+  thumbnail: React.ReactNode;
+  /** Panel body, rendered by the parent Server Component. */
   children: React.ReactNode;
 }
 
 export function ExperienceTimelineItem({
   project,
   defaultExpanded = false,
+  header,
+  thumbnail,
   children,
 }: ExperienceTimelineItemProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const panelId = useId();
-
-  const metaFacts = [
-    categoryLabels[project.category],
-    project.teamSize ? `Team of ${project.teamSize}` : null,
-    project.duration,
-  ].filter((fact): fact is string => Boolean(fact));
 
   // The parent <ol> supplies the <li>; this component owns only the row body.
   return (
@@ -49,12 +51,17 @@ export function ExperienceTimelineItem({
             onClick={() => setIsExpanded((previous) => !previous)}
             aria-expanded={isExpanded}
             aria-controls={panelId}
-            className="flex w-full cursor-pointer items-start justify-between gap-4 px-5 py-5 text-left"
+            aria-label={`${header.name} — ${isExpanded ? header.collapseLabel : header.expandLabel}`}
+            className="flex w-full cursor-pointer items-start gap-4 px-5 py-5 text-left"
           >
-            <span className="min-w-0">
+            <span className="h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-edge">
+              {thumbnail}
+            </span>
+
+            <span className="min-w-0 flex-1">
               {/*
-                No "Current" badge here: the period text already says Current and
-                the green rail marker carries the same signal visually.
+                No "Current" badge: the period text already says Current and the
+                green rail marker carries the same signal visually.
               */}
               <span
                 className={`font-mono text-xs ${project.isCurrent ? "text-live" : "text-accent"}`}
@@ -63,12 +70,12 @@ export function ExperienceTimelineItem({
               </span>
 
               <span className="mt-2 block text-lg font-semibold tracking-tight text-fg">
-                {project.name}
+                {header.name}
               </span>
-              <span className="mt-0.5 block text-sm font-medium text-fg-muted">{project.role}</span>
+              <span className="mt-0.5 block text-sm font-medium text-fg-muted">{header.role}</span>
 
               <span className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[11px] text-fg-dim">
-                {metaFacts.map((fact, index) => (
+                {header.metaFacts.map((fact, index) => (
                   <span key={fact} className="flex items-center gap-2.5">
                     {index > 0 ? <span aria-hidden="true">·</span> : null}
                     {fact}
@@ -95,8 +102,8 @@ export function ExperienceTimelineItem({
         {/*
           Collapse is driven by data-expanded rather than the `hidden` attribute:
           Chrome's UA rule for [hidden] resists author overrides, which left every
-          panel collapsed in the printed CV. A plain author rule can be flipped by
-          the print stylesheet. display:none still removes it from the a11y tree.
+          panel collapsed in the printed CV. display:none still removes it from
+          the a11y tree.
         */}
         <div id={panelId} data-collapsible data-expanded={isExpanded}>
           {children}

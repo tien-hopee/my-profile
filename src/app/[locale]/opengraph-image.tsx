@@ -1,12 +1,31 @@
 import { ImageResponse } from "next/og";
-import { profile } from "@/content/profile";
+import { person } from "@/content/person";
+import { getDictionary } from "@/i18n/get-dictionary";
+import { LOCALES, isLocale } from "@/i18n/locales";
 
-export const alt = `${profile.name} — ${profile.roles.join(" / ")}`;
+export const alt = `${person.name} — CV`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-/** Build-time generated social preview card, matching the site's dark palette. */
-export default function OpengraphImage() {
+/** Without this the image route is rendered on demand instead of prerendered. */
+export function generateStaticParams() {
+  return LOCALES.map((locale) => ({ locale }));
+}
+
+const HEADLINE_STACKS = ["Unity / C#", "Flutter / Dart", "Swift", "Laravel / PHP"];
+
+/**
+ * Build-time social preview card per locale.
+ * Uses only Latin text so no CJK font has to be fetched and embedded at build time.
+ */
+export default async function OpengraphImage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const dictionary = getDictionary(isLocale(locale) ? locale : "en");
+
   return new ImageResponse(
     (
       <div
@@ -32,7 +51,7 @@ export default function OpengraphImage() {
             textTransform: "uppercase",
           }}
         >
-          Curriculum Vitae
+          {`Curriculum Vitae · ${dictionary.locale.toUpperCase()}`}
         </div>
 
         <div
@@ -45,15 +64,15 @@ export default function OpengraphImage() {
             letterSpacing: -2,
           }}
         >
-          {profile.name}
+          {person.name}
         </div>
 
         <div style={{ display: "flex", marginTop: 20, fontSize: 34, color: "#94a3b8" }}>
-          {profile.roles.join("  /  ")}
+          Game / Mobile / Fullstack Engineer
         </div>
 
         <div style={{ display: "flex", marginTop: 48, gap: 16 }}>
-          {profile.headlineStacks.slice(0, 4).map((stack) => (
+          {HEADLINE_STACKS.map((stack) => (
             <div
               key={stack}
               style={{
@@ -71,7 +90,7 @@ export default function OpengraphImage() {
         </div>
 
         <div style={{ display: "flex", marginTop: 44, fontSize: 26, color: "#64748b" }}>
-          {profile.yearsOfExperience} years · 15+ projects · 6 platforms
+          4+ years · 15+ projects · 6 platforms
         </div>
       </div>
     ),

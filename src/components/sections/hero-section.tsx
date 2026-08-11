@@ -1,11 +1,21 @@
-import { profile } from "@/content/profile";
+import type { Dictionary } from "@/i18n/types";
 import { Icon } from "@/components/ui/icon";
 import { PrintCvButton } from "@/components/ui/print-cv-button";
 import { Reveal } from "@/components/ui/reveal";
 import { StatTile } from "@/components/ui/stat-tile";
 import { TechTag } from "@/components/ui/tech-tag";
 
-export function HeroSection() {
+/** Primary stacks, surfaced as proof-at-a-glance. Product names — not translated. */
+const HEADLINE_STACKS = ["Unity / C#", "Flutter / Dart", "Swift", "Laravel / PHP", "Kotlin"];
+
+interface HeroSectionProps {
+  dictionary: Dictionary;
+  name: string;
+}
+
+export function HeroSection({ dictionary, name }: HeroSectionProps) {
+  const { hero, profile } = dictionary;
+
   return (
     <section id="top" className="relative pt-20 pb-16 sm:pt-28 sm:pb-24">
       <div className="mx-auto w-full max-w-5xl px-6">
@@ -14,20 +24,20 @@ export function HeroSection() {
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full rounded-full bg-live opacity-70" />
             </span>
-            OPEN TO OPPORTUNITIES
+            {hero.availability}
           </p>
         </Reveal>
 
         <Reveal delay={60}>
           <h1 className="mt-6 text-balance text-5xl font-semibold tracking-tight text-fg sm:text-6xl lg:text-7xl">
-            {profile.name}
+            {name}
           </h1>
         </Reveal>
 
         <Reveal delay={120}>
           {/*
             Separators trail their role so a line break never starts with "/".
-            Each role is nowrap to keep two-word titles intact.
+            Each role is nowrap to keep multi-word titles intact.
           */}
           <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-sm text-fg-muted">
             {profile.roles.map((role, index) => (
@@ -45,13 +55,13 @@ export function HeroSection() {
 
         <Reveal delay={180}>
           <p className="mt-8 max-w-2xl text-pretty text-lg leading-relaxed text-fg-muted sm:text-xl">
-            {profile.tagline}
+            {hero.tagline}
           </p>
         </Reveal>
 
         <Reveal delay={240}>
           <div className="mt-8 flex flex-wrap gap-2">
-            {profile.headlineStacks.map((stack) => (
+            {HEADLINE_STACKS.map((stack) => (
               <TechTag key={stack} label={stack} emphasis="accent" />
             ))}
           </div>
@@ -63,7 +73,7 @@ export function HeroSection() {
               href="#experience"
               className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-accent/85"
             >
-              View my work
+              {hero.viewWork}
               <Icon name="arrow-down" className="h-4 w-4" />
             </a>
             <a
@@ -71,9 +81,9 @@ export function HeroSection() {
               className="inline-flex items-center gap-2 rounded-lg border border-edge-hi px-5 py-3 text-sm font-semibold text-fg transition-colors duration-200 hover:border-accent/50 hover:text-accent"
             >
               <Icon name="mail" className="h-4 w-4" />
-              Contact me
+              {hero.contactMe}
             </a>
-            <PrintCvButton />
+            <PrintCvButton label={hero.downloadCv} />
           </div>
         </Reveal>
 
