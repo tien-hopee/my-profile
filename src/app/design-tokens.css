@@ -1,0 +1,30 @@
+/*
+  Design tokens — Dark Mode (OLED) + Minimalism, Developer-Tool color family.
+  Token names deliberately avoid Tailwind utility collisions:
+  `canvas`/`fg` instead of `base` (`text-base` is a font-size utility).
+
+  These are the single source of truth for colour. print-styles.css re-points the
+  same custom properties to paper values, which is why no component hardcodes a hex.
+*/
+@theme {
+  --color-canvas: #08090c;
+  --color-panel: #0f1218;
+  --color-panel-hi: #151a22;
+  --color-edge: #1e2530;
+  --color-edge-hi: #2c3644;
+
+  --color-fg: #f1f5f9;
+  --color-fg-muted: #94a3b8;
+  /* Lightened from slate-500 (#64748b), which measured 4.18:1 — below the 4.5:1
+     AA floor for the small mono labels this token is used on. */
+  --color-fg-dim: #7d8b9e;
+
+  --color-accent: #5b9cff;
+  --color-accent-deep: #1e40af;
+  --color-live: #34d399;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-code), ui-monospace, "SF Mono", monospace;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}

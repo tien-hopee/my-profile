@@ -1,0 +1,92 @@
+/*
+  Print: turn the screen page into a clean paper CV.
+  Reached via the "Download CV" button (window.print) so there is no separate
+  PDF file to keep in sync with the site content.
+*/
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  /*
+    Tailwind v4 utilities compile to `var(--color-*)`, so re-pointing the theme
+    tokens to paper values flips every surface, border and text colour at once.
+    Overriding only html/body would leave dark panels as grey boxes with
+    unreadable labels.
+  */
+  :root {
+    --color-canvas: #ffffff;
+    --color-panel: #ffffff;
+    --color-panel-hi: #f5f6f8;
+    --color-edge: #d4d9e1;
+    --color-edge-hi: #b9c0cc;
+    --color-fg: #0b0b0c;
+    --color-fg-muted: #2f343b;
+    --color-fg-dim: #565d69;
+    --color-accent: #1d4ed8;
+    --color-live: #036b4f;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    font-size: 10pt;
+  }
+
+  .ambient-field,
+  .ambient-grid,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  [data-js="on"] .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Force every collapsible project panel open on paper */
+  [data-collapsible] {
+    display: block !important;
+  }
+
+  /* Tighten the screen rhythm; drop the hero's large top offset */
+  section {
+    padding-block: 8pt !important;
+    border-top-width: 0 !important;
+  }
+
+  #top {
+    padding-top: 0 !important;
+  }
+
+  /* Keep short cards (skills, platforms, contact) whole */
+  li,
+  article {
+    break-inside: avoid;
+  }
+
+  /*
+    Expanded project entries are tall; forcing them whole leaves half-empty
+    pages. Let them flow, but never split a title from the body beneath it.
+  */
+  #experience li,
+  #experience article {
+    break-inside: auto;
+  }
+
+  #experience article > h3 {
+    break-inside: avoid;
+    break-after: avoid;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  a {
+    text-decoration: none !important;
+  }
+}

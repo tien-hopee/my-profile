@@ -1,0 +1,113 @@
+@import "tailwindcss";
+@import "./design-tokens.css";
+@import "./print-styles.css";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Sticky header height + breathing room for anchor jumps */
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Visible keyboard focus everywhere; mouse clicks stay clean */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    color: #fff;
+  }
+}
+
+/* ---- Ambient background: fixed, GPU-cheap, non-animated ---- */
+.ambient-field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      70rem 40rem at 18% -10%,
+      color-mix(in srgb, var(--color-accent) 13%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      55rem 35rem at 92% 8%,
+      color-mix(in srgb, #7c3aed 10%, transparent),
+      transparent 60%
+    );
+}
+
+.ambient-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.055) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  /* Fade the grid out toward the bottom so content stays dominant */
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 75%);
+}
+
+/*
+  ---- Scroll reveal (driven by IntersectionObserver in <Reveal/>) ----
+  Progressive enhancement: content is visible by default and only starts hidden
+  when the inline head script confirms JS is running (`data-js="on"`). Without
+  this gate, a JS failure or a non-executing crawler would see an empty page.
+*/
+[data-js="on"] .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s var(--ease-out-soft),
+    transform 0.6s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-js="on"] .reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-js="on"] .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+  ---- Collapsible project panels ----
+  Deliberately NOT the `hidden` attribute: Chrome's UA rule for [hidden] resists
+  author overrides, which left every panel collapsed in the printed CV.
+*/
+[data-collapsible][data-expanded="false"] {
+  display: none;
+}
