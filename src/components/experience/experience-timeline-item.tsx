@@ -4,17 +4,23 @@ import { useId, useState } from "react";
 import type { Project } from "@/content/types";
 import { categoryLabels } from "@/content/projects";
 import { Icon } from "@/components/ui/icon";
-import { ProjectDetailPanel } from "./project-detail-panel";
 
 interface ExperienceTimelineItemProps {
   project: Project;
   /** The most recent entry starts expanded so the page is never fully collapsed. */
   defaultExpanded?: boolean;
+  /**
+   * Panel body, rendered by the parent Server Component. Passing it as children
+   * keeps the detail markup out of the client bundle — only the toggle needs
+   * client behaviour.
+   */
+  children: React.ReactNode;
 }
 
 export function ExperienceTimelineItem({
   project,
   defaultExpanded = false,
+  children,
 }: ExperienceTimelineItemProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const panelId = useId();
@@ -93,12 +99,7 @@ export function ExperienceTimelineItem({
           the print stylesheet. display:none still removes it from the a11y tree.
         */}
         <div id={panelId} data-collapsible data-expanded={isExpanded}>
-          <p className="px-5 pb-1 text-pretty text-sm leading-relaxed text-fg-muted">
-            {project.summary}
-          </p>
-          <div className="pt-4">
-            <ProjectDetailPanel project={project} />
-          </div>
+          {children}
         </div>
       </article>
     </div>

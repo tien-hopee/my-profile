@@ -3,6 +3,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ExperienceTimelineItem } from "@/components/experience/experience-timeline-item";
+import { ProjectDetailPanel } from "@/components/experience/project-detail-panel";
 
 export function ExperienceSection() {
   return (
@@ -26,7 +27,9 @@ export function ExperienceSection() {
         <ol className="space-y-4">
           {projects.map((project, index) => (
             <Reveal as="li" key={project.id} delay={Math.min(index, 6) * 50}>
-              <ExperienceTimelineItem project={project} defaultExpanded={index === 0} />
+              <ExperienceTimelineItem project={project} defaultExpanded={index === 0}>
+                <ProjectDetailPanel project={project} />
+              </ExperienceTimelineItem>
             </Reveal>
           ))}
         </ol>

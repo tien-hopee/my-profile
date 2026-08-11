@@ -1,48 +1,64 @@
 import type { Project } from "@/content/types";
 import { TechTag } from "@/components/ui/tech-tag";
 
-/** Expanded body of a timeline entry: responsibilities, engineering notes, stack. */
+/** Label styling shared by the three subsections below. */
+const LABEL_CLASS = "mb-3 font-mono text-[11px] uppercase tracking-widest text-fg-dim";
+const ITEM_CLASS = "flex gap-3 text-sm leading-relaxed text-fg-muted";
+
+/**
+ * Expanded body of a timeline entry: summary, responsibilities, engineering
+ * notes and stack. Stays a Server Component — collapse is pure CSS, so this
+ * markup never needs to ship as client JS.
+ */
 export function ProjectDetailPanel({ project }: { project: Project }) {
   return (
-    <div className="space-y-6 border-t border-edge/70 px-5 py-5">
-      <div>
-        <h4 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-fg-dim">
-          Responsibilities
-        </h4>
-        <ul className="space-y-2">
-          {project.responsibilities.map((item) => (
-            <li key={item} className="flex gap-3 text-sm leading-relaxed text-fg-muted">
-              <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent/70" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <>
+      <p className="px-5 pb-1 text-pretty text-sm leading-relaxed text-fg-muted">
+        {project.summary}
+      </p>
 
-      {project.engineering && project.engineering.length > 0 ? (
+      <div className="mt-4 space-y-6 border-t border-edge/70 px-5 py-5">
         <div>
-          <h4 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-fg-dim">
-            Engineering notes
-          </h4>
+          <h4 className={LABEL_CLASS}>Responsibilities</h4>
           <ul className="space-y-2">
-            {project.engineering.map((item) => (
-              <li key={item} className="flex gap-3 text-sm leading-relaxed text-fg-muted">
-                <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-fg-dim" />
+            {project.responsibilities.map((item) => (
+              <li key={item} className={ITEM_CLASS}>
+                <span
+                  aria-hidden="true"
+                  className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent/70"
+                />
                 <span>{item}</span>
               </li>
             ))}
           </ul>
         </div>
-      ) : null}
 
-      <div>
-        <h4 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-fg-dim">Stack</h4>
-        <div className="flex flex-wrap gap-1.5">
-          {project.tech.map((tech) => (
-            <TechTag key={tech} label={tech} />
-          ))}
+        {project.engineering && project.engineering.length > 0 ? (
+          <div>
+            <h4 className={LABEL_CLASS}>Engineering notes</h4>
+            <ul className="space-y-2">
+              {project.engineering.map((item) => (
+                <li key={item} className={ITEM_CLASS}>
+                  <span
+                    aria-hidden="true"
+                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-fg-dim"
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        <div>
+          <h4 className={LABEL_CLASS}>Stack</h4>
+          <div className="flex flex-wrap gap-1.5">
+            {project.tech.map((tech) => (
+              <TechTag key={tech} label={tech} />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -11,7 +11,10 @@ import { Icon } from "@/components/ui/icon";
  * during both user scrolling and anchor jumps.
  */
 export function SiteHeader() {
-  const [activeId, setActiveId] = useState<string>(navItems[0].id);
+  // Empty until a section actually intersects: the visitor starts on the hero
+  // (id="top", not a nav item), so defaulting to navItems[0] would mark "About"
+  // as current before it has been reached.
+  const [activeId, setActiveId] = useState<string>("");
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {

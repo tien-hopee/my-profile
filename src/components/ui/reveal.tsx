@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface RevealProps {
   children: React.ReactNode;
@@ -17,8 +17,17 @@ interface RevealProps {
  * `prefers-reduced-motion`, so no JS branch is needed for that case.
  */
 export function Reveal({ children, delay = 0, className = "", as = "div" }: RevealProps) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+
+  /*
+    A callback ref keeps this sound across all three allowed tags. Casting to
+    `Ref<HTMLDivElement & HTMLLIElement>` would claim `current.value` (an
+    HTMLLIElement-only property) exists even when rendering a div or section.
+  */
+  const setRef = useCallback((node: HTMLElement | null) => {
+    ref.current = node;
+  }, []);
 
   useEffect(() => {
     const node = ref.current;
@@ -48,8 +57,7 @@ export function Reveal({ children, delay = 0, className = "", as = "div" }: Reve
 
   return (
     <Tag
-      // One shared ref type across the three allowed tags.
-      ref={ref as React.Ref<HTMLDivElement & HTMLLIElement>}
+      ref={setRef}
       className={`reveal ${className}`}
       data-visible={isVisible}
       style={{ "--reveal-delay": `${delay}ms` } as React.CSSProperties}

@@ -58,10 +58,13 @@ export function EducationSection() {
               </div>
             ))}
           </dl>
-          <PlaceholderNote>
-            Confirm your English level and add your JLPT level — worth stating explicitly given your
-            Japanese-client experience.
-          </PlaceholderNote>
+          {/* Gated like the other notes, so it disappears once real levels land. */}
+          {languages.some((language) => language.isPlaceholder) ? (
+            <PlaceholderNote>
+              Confirm your English level and add your JLPT level — worth stating explicitly given
+              your Japanese-client experience.
+            </PlaceholderNote>
+          ) : null}
         </Reveal>
       </div>
     </Section>

@@ -12,8 +12,9 @@ export function AboutSection() {
 
       <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr]">
         <div className="space-y-5">
+          {/* Static, never-reordered array — index is a stable key here. */}
           {profile.about.map((paragraph, index) => (
-            <Reveal key={paragraph.slice(0, 32)} delay={index * 80}>
+            <Reveal key={index} delay={index * 80}>
               <p className="text-pretty leading-relaxed text-fg-muted">{paragraph}</p>
             </Reveal>
           ))}
